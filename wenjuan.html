@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>问卷调查</title>
+    <style>
+    .youscreen{
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background-color: #ffcad382;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+    }
+    
+    .youtext{
+          font-size: 7vw;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f5f7;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        transition: all 0.3s;
+    }
+
+    .container {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        width: 90%;
+        max-width: 500px;
+        text-align: center;
+        transition: all 0.3s;
+    }
+
+    /* 输入框美化 */
+    #question {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 30px;
+        font-weight: 600;
+    }
+
+    .input-container {
+        position: relative;
+        margin-bottom: 30px;
+    }
+
+    #answer {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 16px;
+        color: #333;
+        transition: all 0.3s ease;
+        background-color: #fafafa;
+        box-sizing: border-box;
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    /* 定义动画 */
+    @keyframes scaleIn {
+        from {
+            transform: scale(0.8);
+            opacity: 0;
+        }
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    #answer.animate {
+        animation: scaleIn 0.5s ease-out forwards;
+    }
+
+    #answer:focus {
+        outline: none;
+        border-color: #e0d5ff;
+        background-color: white;
+        box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+    }
+
+    #answer::placeholder {
+        color: #999;
+    }
+
+    /* 按钮美化 */
+    #nextBtn {
+        background-color: #c9b7fb;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    #nextBtn:hover {
+        background-color: #c9b7fb;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+    }
+
+    #nextBtn:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+    /* 弹窗样式 */
+    .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border: 2px solid #ead9ff;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        z-index: 1000;
+        max-width: 90%;
+    }
+
+    .popup button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        background-color: #c9b7fb;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .popup button:hover {
+        background-color: #c9b7fb;
+    }
+
+    /* 特效页面 */
+    .youscreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #ffcad382;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        display: none;
+    }
+
+    .yes-text {
+        font-size: 7vw;
+        color: #6c5ce7;
+        margin-bottom: 30px;
+    }
+
+    .yes-image {
+        max-width: 80%;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* 血液效果样式 */
+    .blood-text {
+        position: fixed;
+        color: #ff0000;
+        font-weight: bold;
+        z-index: 1001;
+        animation: bloodAnimation 5s forwards;
+        pointer-events: none;
+        text-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+    }
+    
+    .blood-box {
+        position: fixed;
+        background-color: rgba(255, 0, 0, 0.2);
+        border: 2px solid #ff0000;
+        padding: 10px;
+        z-index: 1000;
+        animation: bloodAnimation 5s forwards;
+        pointer-events: none;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    }
+    
+    .retry-text {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border: 2px solid #ff0000;
+        padding: 20px;
+        border-radius: 10px;
+        z-index: 1002;
+        font-weight: bold;
+        color: #ff0000;
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+    }
+    
+    @keyframes bloodAnimation {
+        0% {
+            opacity: 1;
+            transform: translateY(-100px) rotate(0deg);
+        }
+        100% {
+            opacity: 0;
+            transform: translateY(100vh) rotate(360deg);
+        }
+    }
+    
+    /* 抖动效果 */
+    .apocalypse-shake {
+        animation: shake 0.5s ease-in-out infinite;
+    }
+    
+    .deep-apocalypse-mode {
+        animation: deepShake 0.8s ease-in-out infinite;
+        filter: blur(2px) hue-rotate(300deg);
+    }
+    
+    @keyframes shake {
+        0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
+        10% { transform: translateX(-5px) translateY(-3px) rotate(-1deg); }
+        20% { transform: translateX(5px) translateY(3px) rotate(1deg); }
+        30% { transform: translateX(-7px) translateY(-5px) rotate(-2deg); }
+        40% { transform: translateX(7px) translateY(5px) rotate(2deg); }
+        50% { transform: translateX(-5px) translateY(-3px) rotate(-1deg); }
+        60% { transform: translateX(5px) translateY(3px) rotate(1deg); }
+        70% { transform: translateX(-3px) translateY(-2px) rotate(-1deg); }
+        80% { transform: translateX(3px) translateY(2px) rotate(1deg); }
+        90% { transform: translateX(-2px) translateY(-1px) rotate(0deg); }
+    }
+    
+    @keyframes deepShake {
+        0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
+        10% { transform: translateX(-10px) translateY(-5px) rotate(-3deg); }
+        20% { transform: translateX(10px) translateY(5px) rotate(3deg); }
+        30% { transform: translateX(-15px) translateY(-8px) rotate(-5deg); }
+        40% { transform: translateX(15px) translateY(8px) rotate(5deg); }
+        50% { transform: translateX(-12px) translateY(-6px) rotate(-4deg); }
+        60% { transform: translateX(12px) translateY(6px) rotate(4deg); }
+        70% { transform: translateX(-8px) translateY(-4px) rotate(-2deg); }
+        80% { transform: translateX(8px) translateY(4px) rotate(2deg); }
+        90% { transform: translateX(-5px) translateY(-2px) rotate(-1deg); }
+    }
+
+    /* 禁用状态 */
+    .disabled {
+        opacity: 0.5;
+        transform: scale(0.95);
+        filter: blur(1px);
+    }
+    
+    button:disabled, input:disabled {
+        opacity: 0.5;
+        cursor: not-allowed !important;
+    }
+    
+    button:disabled:hover, input:disabled:hover {
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
+    </style>
+</head>
+<body>
+    <audio id="music" src="https://sf5-hl-cdn-tos.douyinstatic.com/obj/ies-music/7415606916367272767.mp3"></audio>
+    <audio id="musichp" src="https://sf5-hl-cdn-tos.douyinstatic.com/obj/ies-music/7210339637892549434.mp3" loop></audio>
+    
+   <div class="container">
+        <div id="question"></div>
+        <div class="input-container">
+            <input type="text" id="answer" autocomplete="off" placeholder="请输入你的答案...">
+        </div>
+        <button id="nextBtn">下一个</button>
+    </div>
+    
+    <div class="youscreen">
+        <h1 class="yes-text">我也喜欢你~♡︎ᐝ</h1>
+        <img src="https://dy.dw0.cn/uploads/20250222/2e3ef643fa797be6e5062615d75d5c6d.gif" alt="HAPI" class="yes-image">
+    </div>
+
+    <script>
+        // 初始化问题和答案
+        const answerst = "你<br/>喜欢你<br/>是你<br/>you";
+        const questionst = "最喜欢的歌是什么?<br/>最喜欢什么颜色?<br/>最喜欢的食物是什么?<br/>最喜欢的季节是什么?<br/>最喜欢什么动物?<br/>最喜欢的人是谁?";
+        const textst = "为什么不填我<br/>说好的地久天长呢<br/>凝视着我，目光别移开<br/>我一直注视着你<br/>拒绝是新型的告白对吧对吧<br/>我能感觉到你心里有我，对不对<br/>我知道你喜欢我的 对吧<br/>我的视线从未从你身上离开<br/>抗拒也许是另一种靠近，对不对对不对";
+        const textstw = "哈哈哈哈哈哈哈哈哈哈哈哈哈<br/>别白费力气啦…… 别白费力气啦…… 别白费力气啦……<br/>只可以钟情于我……<br/>爱你…… 你…… 爱…… 爱你……<br/>一切都已经太迟了<br/>我们注定要一直甜蜜相伴<br/>一切都已经板上钉钉咯<br/>爱你...你...爱...爱你...";
+        const opportunity = "再给你一次机会";
+        
+        // DOM元素
+        const questionElement = document.getElementById('question');
+        const answerInput = document.getElementById('answer');
+        const nextButton = document.getElementById('nextBtn');
+        const musicElement = document.getElementById('music');
+        const musichpElement = document.getElementById('musichp');
+        const youscreenElement = document.querySelector('.youscreen');
+        const containerElement = document.querySelector('.container');
+        const bodyElement = document.body;
+        
+        // 问题状态
+        const questions = questionst.split('<br/>');
+        const answers = answerst.split('<br/>');
+        const texts = textst.split('<br/>');
+        const textsw = textstw.split('<br/>');
+        let currentStep = 0;
+        let retryCount = 0;
+        let isApocalypse = false;
+        let bloodInterval;
+        
+        // 初始化问卷
+        function initQuestionnaire() {
+            updateQuestion();
+            
+            // 添加事件监听器
+            nextButton.addEventListener('click', nextQuestion);
+            
+            // 按回车键也可以提交
+            answerInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    nextQuestion();
+                }
+            });
+            
+            // 显示初始弹窗
+            showWelcomePopup();
+        }
+        
+        // 显示欢迎弹窗
+        function showWelcomePopup() {
+            const messagest = "一定要说真话哦<br/>......<br/>最喜欢你了^_^";
+            const messages = messagest.split('<br/>');
+            let index = 0;
+            
+            function showPopup() {
+                if (index < messages.length) {
+                    let popup = document.createElement("div");
+                    popup.className = "popup";
+                    popup.textContent = messages[index];
+                    let button = document.createElement("button");
+                    button.textContent = "关闭";
+                    button.onclick = function() {
+                        document.body.removeChild(popup);
+                        if (index === messages.length - 1) {
+                            // 点击最后一个关闭按钮时触发输入框放大动画
+                            answerInput.classList.add('animate');
+                        } else {
+                            index++;
+                            showPopup();
+                        }
+                    };
+                    popup.appendChild(document.createElement("br"));
+                    popup.appendChild(button);
+                    document.body.appendChild(popup);
+                }
+            }
+            
+            showPopup();
+        }
+        
+        // 更新问题
+        function updateQuestion() {
+            if (currentStep < questions.length) {
+                questionElement.textContent = questions[currentStep];
+                answerInput.value = "";
+                
+                if (currentStep === questions.length - 1) {
+                    nextButton.textContent = "提交答案";
+                } else {
+                    nextButton.textContent = "下一个";
+                }
+            }
+        }
+        
+        // 下一个问题
+        function nextQuestion() {
+            if (currentStep < questions.length - 1) {
+                currentStep++;
+                updateQuestion();
+            } else {
+                checkFinalAnswer();
+            }
+        }
+        
+        // 检查最终答案
+        function checkFinalAnswer() {
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            const correctAnswers = answers.map(a => a.toLowerCase());
+            
+            if (retryCount === 0 && !correctAnswers.includes(userAnswer)) {
+                triggerBloodEffect();
+            } else if (correctAnswers.includes(userAnswer)) {
+                showSuccessScreen();
+            } else {
+                triggerDeeperApocalypse();
+            }
+        }
+        
+        // 触发血液效果
+        function triggerBloodEffect() {
+            musicElement.play();
+            isApocalypse = true;
+            retryCount++;
+            
+            // 禁用输入和按钮
+            answerInput.disabled = true;
+            nextButton.disabled = true;
+            containerElement.classList.add('disabled');
+            
+            // 添加抖动效果
+            containerElement.classList.add('apocalypse-shake');
+            
+            // 创建血液效果
+            createBloodEffect();
+            
+            // 3秒后停止抖动并显示重试机会
+            setTimeout(() => {
+                containerElement.classList.remove('apocalypse-shake');
+                showRetryOpportunity();
+            }, 3000);
+        }
+        
+        // 创建血液效果
+        function createBloodEffect() {
+            // 清除之前的间隔
+            if (bloodInterval) clearInterval(bloodInterval);
+            
+            // 创建血液文本效果
+            bloodInterval = setInterval(() => {
+                if (!isApocalypse) return;
+                
+                // 创建血液文本
+                const bloodText = document.createElement('div');
+                bloodText.className = 'blood-text';
+                bloodText.textContent = texts[Math.floor(Math.random() * texts.length)];
+                bloodText.style.left = Math.random() * 80 + 5 + '%';
+                bloodText.style.fontSize = (Math.random() * 10 + 16) + 'px';
+                bloodText.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                document.body.appendChild(bloodText);
+                
+                // 创建血液框
+                if (Math.random() > 0.7) {
+                    const bloodBox = document.createElement('div');
+                    bloodBox.className = 'blood-box';
+                    bloodBox.textContent = texts[Math.floor(Math.random() * texts.length)];
+                    bloodBox.style.left = Math.random() * 60 + 10 + '%';
+                    bloodBox.style.top = Math.random() * 40 + 10 + '%';
+                    bloodBox.style.width = (Math.random() * 150 + 100) + 'px';
+                    bloodBox.style.animationDuration = (Math.random() * 2 + 4) + 's';
+                    document.body.appendChild(bloodBox);
+                    
+                    // 自动移除元素
+                    setTimeout(() => {
+                        if (bloodBox.parentNode) document.body.removeChild(bloodBox);
+                    }, 5000);
+                }
+                
+                // 自动移除文本元素
+                setTimeout(() => {
+                    if (bloodText.parentNode) document.body.removeChild(bloodText);
+                }, 5000);
+            }, 300);
+        }
+        
+        // 显示重试机会
+        function showRetryOpportunity() {
+            const retryMsg = document.createElement('div');
+            retryMsg.className = 'retry-text';
+            retryMsg.textContent = opportunity;
+            document.body.appendChild(retryMsg);
+            
+            setTimeout(() => {
+                if (retryMsg.parentNode) document.body.removeChild(retryMsg);
+                
+                // 重置状态
+                isApocalypse = false;
+                clearInterval(bloodInterval);
+                
+                // 重新启用输入
+                answerInput.disabled = false;
+                nextButton.disabled = false;
+                containerElement.classList.remove('disabled');
+                answerInput.value = "";
+                answerInput.focus();
+            }, 2000);
+        }
+        
+        // 触发更深层的末日效果
+        function triggerDeeperApocalypse() {
+            musicElement.play();
+            isApocalypse = true;
+            
+            // 禁用输入和按钮
+            answerInput.disabled = true;
+            nextButton.disabled = true;
+            containerElement.classList.add('disabled');
+            
+            // 添加更强的抖动效果
+            bodyElement.classList.add('deep-apocalypse-mode');
+            
+            // 创建更强的血液效果
+            createDeeperBloodEffect();
+            
+            // 显示更强的错误消息
+            showDeeperBloodMessage();
+        }
+        
+        // 创建更强的血液效果
+        function createDeeperBloodEffect() {
+            // 清除之前的间隔
+            if (bloodInterval) clearInterval(bloodInterval);
+            
+            // 创建更强的血液文本效果
+            bloodInterval = setInterval(() => {
+                if (!isApocalypse) return;
+                
+                // 创建多个血液文本
+                for (let i = 0; i < 3; i++) {
+                    const bloodText = document.createElement('div');
+                    bloodText.className = 'blood-text';
+                    bloodText.textContent = textsw[Math.floor(Math.random() * textsw.length)];
+                    bloodText.style.left = Math.random() * 80 + 5 + '%';
+                    bloodText.style.fontSize = (Math.random() * 15 + 20) + 'px';
+                    bloodText.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    bloodText.style.color = i === 0 ? '#ff0000' : (i === 1 ? '#ff6666' : '#ff9999');
+                    document.body.appendChild(bloodText);
+                    
+                    // 自动移除元素
+                    setTimeout(() => {
+                        if (bloodText.parentNode) document.body.removeChild(bloodText);
+                    }, 5000);
+                }
+                
+                // 创建血液框
+                if (Math.random() > 0.5) {
+                    const bloodBox = document.createElement('div');
+                    bloodBox.className = 'blood-box';
+                    bloodBox.textContent = textsw[Math.floor(Math.random() * textsw.length)];
+                    bloodBox.style.left = Math.random() * 50 + 10 + '%';
+                    bloodBox.style.top = Math.random() * 50 + 10 + '%';
+                    bloodBox.style.width = (Math.random() * 200 + 150) + 'px';
+                    bloodBox.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                    document.body.appendChild(bloodBox);
+                    
+                    // 自动移除元素
+                    setTimeout(() => {
+                        if (bloodBox.parentNode) document.body.removeChild(bloodBox);
+                    }, 5000);
+                }
+            }, 200);
+        }
+        
+        // 显示更强的错误消息
+        function showDeeperBloodMessage() {
+            const randomError = textsw[Math.floor(Math.random() * textsw.length)];
+            
+            const bloodMsg = document.createElement('div');
+            bloodMsg.className = 'blood-text';
+            bloodMsg.textContent = randomError;
+            bloodMsg.style.left = '50%';
+            bloodMsg.style.top = '40%';
+            bloodMsg.style.fontSize = '28px';
+            bloodMsg.style.transform = 'translateX(-50%)';
+            bloodMsg.style.zIndex = '1003';
+            bloodMsg.style.textShadow = '0 0 10px rgba(255, 0, 0, 0.8)';
+            document.body.appendChild(bloodMsg);
+            
+            setTimeout(() => {
+                if (bloodMsg.parentNode) document.body.removeChild(bloodMsg);
+            }, 3000);
+        }
+        
+        // 显示成功界面
+        function showSuccessScreen() {
+            containerElement.style.display = 'none';
+            youscreenElement.style.display = 'flex';
+            musichpElement.play();
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', initQuestionnaire);
+    </script>
+</body>
+  </html>
