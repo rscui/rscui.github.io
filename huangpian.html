@@ -58,7 +58,7 @@
             100% { transform: scale(1); opacity: 1; }
         }
         
-        .logo {
+        。logo {
             font-size: 28px;
             font-weight: bold;
             color: #ff4500;
@@ -67,26 +67,26 @@
             letter-spacing: 1px;
         }
         
-        .title {
+        。title {
             font-size: 24px;
             color: #333;
             margin-bottom: 15px;
         }
         
-        .description {
+        。description {
             color: #666;
             line-height: 1.6;
             margin-bottom: 25px;
         }
         
-        .buttons {
+        。buttons {
             display: flex;
             justify-content: center;
             gap: 20px;
             margin-bottom: 20px;
         }
         
-        .btn {
+        。btn {
             padding: 12px 30px;
             border: none;
             border-radius: 5px;
@@ -96,7 +96,7 @@
             transition: all 0.3s ease;
         }
         
-        .btn-underage {
+        。btn-underage {
             background: #e74c3c;
             color: white;
         }
@@ -182,7 +182,7 @@
             display: none; /* 初始隐藏 */
         }
         
-        .audio-control-btn:hover {
+        。audio-control-btn:hover {
             background: #e03c00;
         }
     </style>
@@ -218,8 +218,8 @@
         <p class="additional-message" id="additionalMessage">tmd，笑死我了。</p>
         
         <!-- 备用播放按钮（自动播放失败时显示） -->
-        <button class="audio-control-btn" id="toggleAudioBtn">点击播放恶搞音频</button>
-        <p class="audio-status" id="audioStatus">音频准备播放中...</p>
+        <button class="audio-control-btn" id="toggleAudioBtn"> </button>
+        <p class="audio-status" id="audioStatus"> </p>
     </div>
 
     <script>
@@ -269,28 +269,28 @@
         btnAdult.addEventListener('click', function() {
             // 1. 切换界面
             ageVerification.style.display = 'none';
-            accessGranted.style.display = 'block';
+            accessGranted。style.display = 'block';
 
             // 2. 动态创建本地音频元素（仅此时加载，避免初始播放）
             const prankAudio = document.createElement('audio');
             prankAudio.loop = true; // 循环播放
             const audioSource = document.createElement('source');
-            audioSource.src = 'prank.mp3'; // 本地音频文件名（wav需改src为prank.wav，type为audio/wav）
+            audioSource。src = 'prank.mp3'; // 本地音频文件名（wav需改src为prank.wav，type为audio/wav）
             audioSource.type = 'audio/mpeg';
             prankAudio.appendChild(audioSource);
             prankAudio.style.display = 'none';
             document.body.appendChild(prankAudio);
 
             // 3. 自动播放音频（点击按钮触发，符合浏览器交互要求）
-            prankAudio.play().then(() => {
-                audioStatus.textContent = '本地恶搞音频自动播放中~';
+            prankAudio.play()。then(() => {
+                audioStatus.textContent = ' ';
             }).catch(() => {
                 // 极端情况自动播放失败，显示备用按钮
-                audioStatus.textContent = '自动播放需确认，点击按钮播放~';
+                audioStatus.textContent = ' ';
                 toggleAudioBtn.style.display = 'inline-block';
                 toggleAudioBtn.addEventListener('click', () => {
                     prankAudio.play();
-                    audioStatus.textContent = '本地恶搞音频播放中~';
+                    audioStatus.textContent = ' ';
                     toggleAudioBtn.style.display = 'none';
                 }, { once: true });
             });
