@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>黄❤️❤️❤️片❤️❤️❤️乐❤️❤️❤️园❤️❤️❤️</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
         
@@ -40,6 +41,7 @@
             width: 100%;
             height: 100%;
             backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             z-index: -1;
         }
         
@@ -174,7 +176,23 @@
             font-style: italic;
         }
         
-        /* 备用控制按钮（仅自动播放失败时显示） */
+        .loading-bar {
+            width: 100%;
+            height: 6px;
+            background: #f0f0f0;
+            border-radius: 3px;
+            margin: 15px 0;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .loading-progress {
+            height: 100%;
+            background: #ff4500;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
         .audio-control-btn {
             padding: 10px 25px;
             border: none;
@@ -186,14 +204,13 @@
             cursor: pointer;
             transition: background 0.3s ease;
             margin-top: 10px;
-            display: none; /* 初始隐藏 */
+            display: none;
         }
         
         .audio-control-btn:hover {
             background: #e03c00;
         }
         
-        /* 移动端适配 */
         @media (max-width: 480px) {
             .age-verification {
                 padding: 20px;
@@ -235,9 +252,14 @@
     
     <div class="blur-overlay"></div>
     
-    <!-- 原年龄验证界面完全保留 -->
+    <!-- 预加载音频 -->
+    <audio id="preloadAudio" preload="auto" style="display:none">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-funny-cartoon-squeak-415.mp3" type="audio/mpeg">
+    </audio>
+    
+    <!-- 年龄验证界面 -->
     <div class="age-verification" id="ageVerification">
-        <div class="logo">内容警告</div>
+        <div class="logo">内容验证</div>
         <h1 class="title" id="title">年龄验证</h1>
         <p class="description" id="description">根据相关法律法规，您需要确认已年满18岁才能访问此内容。请选择您的年龄范围。</p>
         
@@ -247,290 +269,139 @@
         </div>
         
         <p class="disclaimer" id="disclaimer">点击"已满18岁"即表示您确认已年满18岁并同意我们的使用条款。</p>
+        
+        <!-- 预加载进度条 -->
+        <div class="loading-bar" id="loadingBar">
+            <div class="loading-progress" id="loadingProgress"></div>
+        </div>
     </div>
     
     <div class="warning" id="warning">未满18岁不得入内！</div>
     
     <!-- 已满18岁界面 -->
     <div class="access-granted" id="accessGranted">
-        <h2 class="access-title" id="accessTitle">笑死我了</h2>
-        <p class="access-message" id="accessMessage">你还真tm想看黄片，你个low b，我真想拿那个筷子塞进你妈</p>
-        <p class="additional-message" id="additionalMessage">tmd，笑死我了。</p>
+        <h2 class="access-title" id="accessTitle">验证成功</h2>
+        <p class="access-message" id="accessMessage">您已通过年龄验证，欢迎访问我们的内容。</p>
+        <p class="additional-message" id="additionalMessage">感谢您的配合。</p>
         
-        <!-- 备用播放按钮（自动播放失败时显示） -->
-        <button class="audio-control-btn" id="toggleAudioBtn">播放音频</button>
-        <p class="audio-status" id="audioStatus">音频加载中...</p>
+        <!-- 音频控制 -->
+        <button class="audio-control-btn" id="toggleAudioBtn">播放音效</button>
+        <p class="audio-status" id="audioStatus">音频已准备就绪</p>
     </div>
 
     <script>
-        // 原文本保留
-        const textVariables = {
-            title: "年龄验证",
-            description: "根据相关法律法规，您需要确认已年满18岁才能访问此内容。请选择您的年龄范围。",
-            disclaimer: "点击'已满18岁'即表示您确认已年满18岁并同意我们的使用条款。",
-            warning: "未满18岁不得入内！",
-            accessTitle: "笑死我了",
-            accessMessage: "你还真tm想看黄片，你个low b，我真想拿那个筷子塞进你妈",
-            additionalMessage: "tmd，笑死我了。"
-        };
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化文本
+            const textVariables = {
+                title: "年龄验证",
+                description: "根据相关法律法规，您需要确认已年满18岁才能访问此内容。请选择您的年龄范围。",
+                disclaimer: "点击'已满18岁'即表示您确认已年满18岁并同意我们的使用条款。",
+                warning: "未满18岁不得入内！",
+                accessTitle: "验证成功",
+                accessMessage: "您已通过年龄验证，欢迎访问我们的内容。",
+                additionalMessage: "感谢您的配合。"
+            };
 
-        // 初始化文本
-        document.getElementById('title').textContent = textVariables.title;
-        document.getElementById('description').textContent = textVariables.description;
-        document.getElementById('disclaimer').textContent = textVariables.disclaimer;
-        document.getElementById('warning').textContent = textVariables.warning;
-        document.getElementById('accessTitle').textContent = textVariables.accessTitle;
-        document.getElementById('accessMessage').textContent = textVariables.accessMessage;
-        document.getElementById('additionalMessage').textContent = textVariables.additionalMessage;
+            document.getElementById('title').textContent = textVariables.title;
+            document.getElementById('description').textContent = textVariables.description;
+            document.getElementById('disclaimer').textContent = textVariables.disclaimer;
+            document.getElementById('warning').textContent = textVariables.warning;
+            document.getElementById('accessTitle').textContent = textVariables.accessTitle;
+            document.getElementById('accessMessage').textContent = textVariables.accessMessage;
+            document.getElementById('additionalMessage').textContent = textVariables.additionalMessage;
 
-        // 获取初始元素
-        const ageVerification = document.getElementById('ageVerification');
-        const accessGranted = document.getElementById('accessGranted');
-        const btnUnderage = document.getElementById('btnUnderage');
-        const btnAdult = document.getElementById('btnAdult');
-        const bgVideo = document.getElementById('bgVideo');
-        const toggleAudioBtn = document.getElementById('toggleAudioBtn');
-        const audioStatus = document.getElementById('audioStatus');
+            // 获取元素
+            const ageVerification = document.getElementById('ageVerification');
+            const accessGranted = document.getElementById('accessGranted');
+            const btnUnderage = document.getElementById('btnUnderage');
+            const btnAdult = document.getElementById('btnAdult');
+            const bgVideo = document.getElementById('bgVideo');
+            const toggleAudioBtn = document.getElementById('toggleAudioBtn');
+            const audioStatus = document.getElementById('audioStatus');
+            const loadingBar = document.getElementById('loadingBar');
+            const loadingProgress = document.getElementById('loadingProgress');
+            const preloadAudio = document.getElementById('preloadAudio');
 
-        // 修复背景视频
-        bgVideo.play().catch(() => {
-            document.body.addEventListener('click', () => bgVideo.play(), { once: true });
-        });
-
-        // 未满18岁逻辑
-        btnUnderage.addEventListener('click', function() {
-            document.querySelector('.warning').classList.add('show');
-            setTimeout(() => {
-                document.body.innerHTML = `<div style="height:100vh;display:flex;justify-content:center;align-items:center;background:#f0f0f0;"><h1 style="color:#e74c3c;font-family:Arial,sans-serif;">访问被拒绝</h1></div>`;
-            }, 2000);
-        });
-
-        // 核心：点击"已满18岁"后，动态创建音频并自动播放
-        btnAdult.addEventListener('click', function() {
-            // 1. 切换界面
-            ageVerification.style.display = 'none';
-            accessGranted.style.display = 'block';
-
-            // 2. 动态创建本地音频元素（仅此时加载，避免初始播放）
-            const prankAudio = document.createElement('audio');
-            prankAudio.loop = true; // 循环播放
-            const audioSource = document.createElement('source');
-            audioSource.src = 'prank.mp3'; // 本地音频文件名（wav需改src为prank.wav，type为audio/wav）
-            audioSource.type = 'audio/mpeg';
-            prankAudio.appendChild(audioSource);
-            prankAudio.style.display = 'none';
-            document.body.appendChild(prankAudio);
-
-            // 3. 自动播放音频（点击按钮触发，符合浏览器交互要求）
-            prankAudio.play().then(() => {
-                audioStatus.textContent = ' ';
-            }).catch(() => {
-                // 极端情况自动播放失败，显示备用按钮
-                audioStatus.textContent = ' ';
-                toggleAudioBtn.style.display = 'inline-block';
-                toggleAudioBtn.addEventListener('click', () => {
-                    prankAudio。play();
-                    audioStatus.textContent = ' ';
-                    toggleAudioBtn.style.display = 'none';
-                }, { once: true });
+            // 修复背景视频
+            bgVideo.play().catch(() => {
+                document.body.addEventListener('click', () => bgVideo.play(), { once: true });
             });
-        });
-    </script>
-</body>
-</html>        }
-        
-        .btn-underage:hover {
-            background: #c0392b;
-            transform: translateY(-2px);
-        }
-        
-        .btn-adult {
-            background: #2ecc71;
-            color: white;
-        }
-        
-        .btn-adult:hover {
-            background: #27ae60;
-            transform: translateY(-2px);
-        }
-        
-        .warning {
-            position: fixed;
-            bottom: -100px;
-            left: 0;
-            width: 100%;
-            background: #e74c3c;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            font-size: 18px;
-            font-weight: bold;
-            transition: bottom 0.5s ease;
-            z-index: 1000;
-        }
-        
-        .warning.show {
-            bottom: 0;
-        }
-        
-        .access-granted {
-            display: none;
-            text-align: center;
-            padding: 50px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .access-title {
-            font-size: 32px;
-            color: #2ecc71;
-            margin-bottom: 20px;
-        }
-        
-        .access-message {
-            font-size: 18px;
-            color: #333;
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
-        
-        .audio-status {
-            margin-top: 15px;
-            color: #666;
-            font-style: italic;
-        }
-        
-        /* 备用控制按钮（仅自动播放失败时显示） */
-        .audio-control-btn {
-            padding: 10px 25px;
-            border: none;
-            border-radius: 5px;
-            background: #ff4500;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            margin-top: 10px;
-            display: none; /* 初始隐藏 */
-        }
-        
-        。audio-control-btn:hover {
-            background: #e03c00;
-        }
-    </style>
-</head>
-<body>
-    <!-- 背景视频 -->
-    <video class="video-background" id="bgVideo" loop muted playsinline autoplay>
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-background-1647-large.mp4" type="video/mp4">
-    </video>
-    
-    <div class="blur-overlay"></div>
-    
-    <!-- 原年龄验证界面完全保留 -->
-    <div class="age-verification" id="ageVerification">
-        <div class="logo">内容警告</div>
-        <h1 class="title" id="title">年龄验证</h1>
-        <p class="description" id="description">根据相关法律法规，您需要确认已年满18岁才能访问此内容。请选择您的年龄范围。</p>
-        
-        <div class="buttons">
-            <button class="btn btn-underage" id="btnUnderage">未满18岁</button>
-            <button class="btn btn-adult" id="btnAdult">已满18岁</button>
-        </div>
-        
-        <p class="disclaimer" id="disclaimer">点击"已满18岁"即表示您确认已年满18岁并同意我们的使用条款。</p>
-    </div>
-    
-    <div class="warning" id="warning">未满18岁不得入内！</div>
-    
-    <!-- 已满18岁界面 -->
-    <div class="access-granted" id="accessGranted">
-        <h2 class="access-title" id="accessTitle">笑死我了</h2>
-        <p class="access-message" id="accessMessage">你还真tm想看黄片，你个low b，我真想拿那个筷子塞进你妈</p>
-        <p class="additional-message" id="additionalMessage">tmd，笑死我了。</p>
-        
-        <!-- 备用播放按钮（自动播放失败时显示） -->
-        <button class="audio-control-btn" id="toggleAudioBtn"> </button>
-        <p class="audio-status" id="audioStatus"> </p>
-    </div>
 
-    <script>
-        // 原文本保留
-        const textVariables = {
-            title: "年龄验证",
-            description: "根据相关法律法规，您需要确认已年满18岁才能访问此内容。请选择您的年龄范围。",
-            disclaimer: "点击'已满18岁'即表示您确认已年满18岁并同意我们的使用条款。",
-            warning: "未满18岁不得入内！",
-            accessTitle: "笑死我了",
-            accessMessage: "你还真tm想看黄片，你个low b，我真想拿那个筷子塞进你妈",
-            additionalMessage: "tmd，笑死我了。"
-        };
+            // 预加载音频
+            let audioLoaded = false;
+            const preloadAudioFunc = function() {
+                loadingBar.style.display = 'block';
+                
+                // 模拟预加载进度
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 5;
+                    loadingProgress.style.width = progress + '%';
+                    
+                    if (progress >= 90) {
+                        clearInterval(progressInterval);
+                    }
+                }, 200);
+                
+                // 实际音频预加载
+                preloadAudio.addEventListener('canplaythrough', function() {
+                    clearInterval(progressInterval);
+                    loadingProgress.style.width = '100%';
+                    setTimeout(() => {
+                        loadingBar.style.display = 'none';
+                    }, 500);
+                    audioLoaded = true;
+                    audioStatus.textContent = '音频已准备就绪';
+                });
+                
+                preloadAudio.addEventListener('error', function() {
+                    clearInterval(progressInterval);
+                    loadingBar.style.display = 'none';
+                    audioStatus.textContent = '音频加载失败';
+                });
+                
+                preloadAudio.load();
+            };
+            
+            // 页面加载后开始预加载
+            setTimeout(preloadAudioFunc, 1000);
 
-        // 初始化文本
-        document.getElementById('title').textContent = textVariables.title;
-        document.getElementById('description').textContent = textVariables.description;
-        document.getElementById('disclaimer').textContent = textVariables.disclaimer;
-        document.getElementById('warning').textContent = textVariables.warning;
-        document.getElementById('accessTitle').textContent = textVariables.accessTitle;
-        document.getElementById('accessMessage').textContent = textVariables.accessMessage;
-        document.getElementById('additionalMessage').textContent = textVariables.additionalMessage;
+            // 未满18岁逻辑
+            btnUnderage.addEventListener('click', function() {
+                document.querySelector('.warning').classList.add('show');
+                setTimeout(() => {
+                    document.body.innerHTML = `<div style="height:100vh;display:flex;justify-content:center;align-items:center;background:#f0f0f0;flex-direction:column;">
+                        <h1 style="color:#e74c3c;font-family:Arial,sans-serif;margin-bottom:20px;">访问被拒绝</h1>
+                        <p style="color:#666;">您未满18岁，无法访问此内容</p>
+                    </div>`;
+                }, 2000);
+            });
 
-        // 获取初始元素
-        const ageVerification = document.getElementById('ageVerification');
-        const accessGranted = document.getElementById('accessGranted');
-        const btnUnderage = document.getElementById('btnUnderage');
-        const btnAdult = document.getElementById('btnAdult');
-        const bgVideo = document.getElementById('bgVideo');
-        const toggleAudioBtn = document.getElementById('toggleAudioBtn');
-        const audioStatus = document.getElementById('audioStatus');
+            // 已满18岁逻辑
+            btnAdult.addEventListener('click', function() {
+                ageVerification.style.display = 'none';
+                accessGranted.style.display = 'block';
+                
+                if (audioLoaded) {
+                    preloadAudio.play().then(() => {
+                        audioStatus.textContent = '音频播放中...';
+                    }).catch((e) => {
+                        console.error('音频播放失败:', e);
+                        audioStatus.textContent = '自动播放失败，请手动播放';
+                        toggleAudioBtn.style.display = 'inline-block';
+                    });
+                } else {
+                    audioStatus.textContent = '音频仍在加载中...';
+                    toggleAudioBtn.style.display = 'inline-block';
+                }
+            });
 
-        // 修复背景视频
-        bgVideo.play().catch(() => {
-            document.body.addEventListener('click', () => bgVideo.play(), { once: true });
-        });
-
-        // 未满18岁逻辑
-        btnUnderage.addEventListener('click', function() {
-            document.querySelector('.warning').classList.add('show');
-            setTimeout(() => {
-                document.body.innerHTML = `<div style="height:100vh;display:flex;justify-content:center;align-items:center;background:#f0f0f0;"><h1 style="color:#e74c3c;font-family:Arial,sans-serif;">访问被拒绝</h1></div>`;
-            }, 2000);
-        });
-
-        // 核心：点击“已满18岁”后，动态创建音频并自动播放
-        btnAdult.addEventListener('click', function() {
-            // 1. 切换界面
-            ageVerification.style.display = 'none';
-            accessGranted。style.display = 'block';
-
-            // 2. 动态创建本地音频元素（仅此时加载，避免初始播放）
-            const prankAudio = document.createElement('audio');
-            prankAudio.loop = true; // 循环播放
-            const audioSource = document.createElement('source');
-            audioSource。src = 'prank.mp3'; // 本地音频文件名（wav需改src为prank.wav，type为audio/wav）
-            audioSource.type = 'audio/mpeg';
-            prankAudio.appendChild(audioSource);
-            prankAudio.style.display = 'none';
-            document.body.appendChild(prankAudio);
-
-            // 3. 自动播放音频（点击按钮触发，符合浏览器交互要求）
-            prankAudio.play()。then(() => {
-                audioStatus.textContent = ' ';
-            }).catch(() => {
-                // 极端情况自动播放失败，显示备用按钮
-                audioStatus.textContent = ' ';
-                toggleAudioBtn.style.display = 'inline-block';
-                toggleAudioBtn.addEventListener('click', () => {
-                    prankAudio.play();
-                    audioStatus.textContent = ' ';
-                    toggleAudioBtn.style.display = 'none';
-                }, { once: true });
+            // 手动播放音频
+            toggleAudioBtn.addEventListener('click', function() {
+                preloadAudio.play();
+                audioStatus.textContent = '音频播放中...';
+                toggleAudioBtn.style.display = 'none';
             });
         });
     </script>
