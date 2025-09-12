@@ -6,8 +6,8 @@
     <meta name="format-detection" content="telephone=no">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     <title>黄❤️❤️❤️片❤️❤️❤️乐❤️❤️❤️园❤️❤️❤️</title>
-    <style>
-        /* 基础重置 */
+    <style type="text/css">
+        /* 微信兼容性基础样式 */
         * {
             margin: 0;
             padding: 0;
@@ -28,67 +28,47 @@
             -webkit-box-align: center;
             -ms-flex-align: center;
             align-items: center;
-            overflow: hidden;
-            position: relative;
-            padding: 10px;
+            padding: 15px;
             font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimSun, sans-serif;
+            color: #333;
         }
         
-        。video-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            -o-object-fit: cover;
-            object-fit: cover;
-            z-index: -1;
-            opacity: 0.8;
-        }
-        
-        。blur-overlay {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backdrop-filter: blur(8px);
-            backdrop-filter: blur(8px);
-            z-index: -1;
-        }
-        
-        。age-verification {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
-            -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0， 0.15);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        .container {
             width: 100%;
             max-width: 400px;
-            padding: 20px;
-            text-align: center;
-            position: relative;
+            background: #fff;
+            border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0， 0, 0.15);
         }
         
-        。logo {
+        。header {
+            background: #ff4500;
+            color: white;
+            padding: 20px;
+            text-align: center;
             font-size: 22px;
             font-weight: bold;
-            color: #ff4500;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        }
+        
+        。content {
+            padding: 20px;
         }
         
         。title {
             font-size: 20px;
             color: #333;
-            margin-bottom: 12px;
-            line-height: 1.4;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
         }
         
         。description {
             color: #666;
             line-height: 1.6;
             margin-bottom: 20px;
-            font-size: 14px;
+            font-size: 16px;
+            text-align: center;
         }
         
         。buttons {
@@ -99,41 +79,48 @@
             -ms-flex-pack: center;
             justify-content: center;
             gap: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             -ms-flex-wrap: wrap;
             flex-wrap: wrap;
         }
         
-        .btn {
-            padding: 10px 20px;
+        。btn {
+            padding: 12px 25px;
             border: none;
             border-radius: 5px;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             -webkit-transition: all 0.3s ease;
             transition: all 0.3s ease;
-            min-width: 120px;
+            min-width: 140px;
             -webkit-appearance: none;
         }
         
-        .btn-underage {
+        。btn-underage {
             background: #e74c3c;
             color: white;
         }
         
-        .btn-adult {
+        。btn-adult {
             background: #2ecc71;
             color: white;
         }
         
-        .disclaimer {
-            color: #888;
-            font-size: 12px;
-            line-height: 1.5;
+        。btn:active {
+            opacity: 0.8;
+            transform: scale(0.98);
         }
         
-        .warning {
+        。disclaimer {
+            color: #888;
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        。warning {
             position: fixed;
             bottom: -100px;
             left: 0;
@@ -141,7 +128,7 @@
             background: #e74c3c;
             color: white;
             text-align: center;
-            padding: 12px;
+            padding: 15px;
             font-size: 16px;
             font-weight: bold;
             -webkit-transition: bottom 0.5s ease;
@@ -153,307 +140,125 @@
             bottom: 0;
         }
         
-        .access-granted {
+        /* 结果页面 */
+        .result-container {
             display: none;
             text-align: center;
             padding: 25px;
             background: white;
             border-radius: 10px;
-            -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             width: 100%;
             max-width: 400px;
             margin: 0 auto;
-            position: relative;
-            z-index: 2;
         }
         
-        .access-title {
+        .result-title {
             font-size: 24px;
             color: #2ecc71;
             margin-bottom: 15px;
+            font-weight: bold;
         }
         
-        .access-message {
+        。result-message {
             font-size: 16px;
             color: #333;
             line-height: 1.6;
             margin-bottom: 20px;
         }
         
-        .audio-status {
-            margin-top: 15px;
-            color: #666;
-            font-style: italic;
-            font-size: 14px;
-        }
-        
-        /* 加载界面 */
-        .loading-screen {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 9999;
-            -webkit-box-pack: center;
-            -ms-flex-pack: center;
-            justify-content: center;
-            -webkit-box-align: center;
-            -ms-flex-align: center;
-            align-items: center;
-            -webkit-box-orient: vertical;
-            -webkit-box-direction: normal;
-            -ms-flex-direction: column;
-            flex-direction: column;
-            color: white;
-        }
-        
-        .loader {
-            width: 60px;
-            height: 60px;
-            border: 6px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top: 6px solid #ff4500;
-            -webkit-animation: spin 1s linear infinite;
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
-        }
-        
-        @-webkit-keyframes spin {
-            0% { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
-            100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
-        }
-        
-        @keyframes spin {
-            0% { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
-            100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
-        }
-        
-        .loading-text {
-            font-size: 16px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        
-        .loading-progress {
-            width: 250px;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        
-        。progress-bar {
-            height: 100%;
-            background: #ff4500;
-            width: 0%;
-            -webkit-transition: width 0.3s ease;
-            transition: width 0.3s ease;
-        }
-        
-        。audio-control-btn {
-            padding: 8px 20px;
-            border: none;
-            border-radius: 5px;
-            background: #ff4500;
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            -webkit-transition: background 0.3s ease;
-            transition: background 0.3s ease;
-            margin-top: 10px;
-            display: none;
+        /* 媒体查询 - 移动端适配 */
+        @media screen and (max-width: 360px) {
+            。btn {
+                min-width: 120px;
+                padding: 10px 20px;
+                font-size: 15px;
+            }
+            
+            。header {
+                padding: 15px;
+                font-size: 20px;
+            }
+            
+            。content {
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 背景视频 -->
-    <video class="video-background" id="bgVideo" loop muted playsinline>
-        <source src="" type="video/mp4">
-    </video>
-    
-    <div class="blur-overlay"></div>
-    
-    <!-- 加载界面 -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loader"></div>
-        <div class="loading-text" id="loadingText">91av\n大量色片免费看 同城约炮 就来九一</div>
-        <div class="loading-progress">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-    </div>
-    
-    <!-- 年龄验证界面 -->
-    <div class="age-verification" id="ageVerification">
-        <div class="logo">内容警告</div>
-        <h1 class="title" id="title">年龄验证</h1>
-        <p class="description" id="description">根据相关法律法规，您需要确认已年满18岁才能访问此内容。请选择您的年龄范围。</p>
+    <!-- 主容器 -->
+    <div class="container">
+        <div class="header">内容警告</div>
         
-        <div class="buttons">
-            <button class="btn btn-underage" id="btnUnderage">未满18岁</button>
-            <button class="btn btn-adult" id="btnAdult">已满18岁</button>
+        <div class="content">
+            <h1 class="title">年龄验证</h1>
+            <p class="description">根据相关法律法规，您需要确认已年满18岁才能访问此内容。请选择您的年龄范围。</p>
+            
+            <div class="buttons">
+                <button class="btn btn-underage" id="btnUnderage">未满18岁</button>
+                <button class="btn btn-adult" id="btnAdult">已满18岁</button>
+            </div>
+            
+            <p class="disclaimer">点击"已满18岁"即表示您确认已年满18岁并同意我们的使用条款。</p>
         </div>
-        
-        <p class="disclaimer" id="disclaimer">点击"已满18岁"即表示您确认已年满18岁并同意我们的使用条款。</p>
     </div>
     
     <div class="warning" id="warning">未满18岁不得入内！</div>
     
-    <!-- 已满18岁界面 -->
-    <div class="access-granted" id="accessGranted">
-        <h2 class="access-title" id="accessTitle">笑死我了</h2>
-        <p class="access-message" id="accessMessage">你还真tm想看黄片，你个low b，我真想拿那个筷子塞进你妈</p>
-        <p class="additional-message" id="additionalMessage">tmd，笑死我了。</p>
-        
-        <!-- 音频控制 -->
-        <button class="audio-control-btn" id="toggleAudioBtn">播放音效</button>
-        <p class="audio-status" id="audioStatus">音频准备就绪，点击上方按钮播放</p>
+    <!-- 结果页面 -->
+    <div class="result-container" id="resultContainer">
+        <h2 class="result-title">笑死我了</h2>
+        <p class="result-message">你还真tm想看黄片，你个low b，我真想拿那个筷子塞进你妈</p>
+        <p class="result-message">tmd，笑死我了。</p>
     </div>
 
-    <script>
+    <script type="text/javascript">
         // 确保DOM完全加载后再执行
         document.addEventListener('DOMContentLoaded', function() {
-            // 原文本保留
-            var textVariables = {
-                title: "年龄验证",
-                description: "根据相关法律法规，您需要确认已年满18岁才能访问此内容。请选择您的年龄范围。",
-                disclaimer: "点击'已满18岁'即表示您确认已年满18岁并同意我们的使用条款。",
-                warning: "未满18岁不得入内！",
-                accessTitle: "笑死我了",
-                accessMessage: "你还真tm想看黄片，你个low b，我真想拿那个筷子塞进你妈",
-                additionalMessage: "tmd，笑死我了。"
-            };
-
-            // 初始化文本
-            document.getElementById('title').textContent = textVariables.title;
-            document.getElementById('description').textContent = textVariables.description;
-            document.getElementById('disclaimer').textContent = textVariables.disclaimer;
-            document.getElementById('warning').textContent = textVariables.warning;
-            document.getElementById('accessTitle').textContent = textVariables.accessTitle;
-            document.getElementById('accessMessage').textContent = textVariables.accessMessage;
-            document.getElementById('additionalMessage').textContent = textVariables.additionalMessage;
-
             // 获取元素
-            var ageVerification = document.getElementById('ageVerification');
-            var accessGranted = document.getElementById('accessGranted');
+            var container = document.querySelector('.container');
             var btnUnderage = document.getElementById('btnUnderage');
             var btnAdult = document.getElementById('btnAdult');
-            var bgVideo = document.getElementById('bgVideo');
-            var toggleAudioBtn = document.getElementById('toggleAudioBtn');
-            var audioStatus = document.getElementById('audioStatus');
-            var loadingScreen = document.getElementById('loadingScreen');
-            var loadingText = document.getElementById('loadingText');
-            var progressBar = document.getElementById('progressBar');
-
-            // 音频元素
-            var prankAudio = null;
-
-            // 移除视频自动播放以避免微信中的问题
-            bgVideo.removeAttribute('autoplay');
-
-            // 未满18岁逻辑
-            btnUnderage.addEventListener('click', function() {
-                var warning = document.querySelector('.warning');
-                warning.classList.add('show');
-                setTimeout(function() {
-                    document。body.innerHTML = '<div style="height:100vh;display:flex;justify-content:center;align-items:center;background:#f0f0f0;flex-direction:column;padding:20px;"><h1 style="color:#e74c3c;font-family:Arial,sans-serif;margin-bottom:15px;text-align:center;">访问被拒绝</h1><p style="color:#666;text-align:center;">您未满18岁，无法访问此内容</p></div>';
-                }, 2000);
-            });
-
-            // 已满18岁逻辑
-            btnAdult.addEventListener('click', function() {
-                // 显示加载界面
-                loadingScreen.style.display = 'flex';
-                
-                // 创建音频元素
-                prankAudio = new Audio();
-                prankAudio.loop = true;
-                prankAudio.preload = 'auto';
-                
-                // 设置本地音频文件路径
-                prankAudio.src = 'prank.mp3'; // 请确保此文件存在于服务器上
-                
-                // 模拟加载进度
-                var progress = 0;
-                var progressInterval = setInterval(function() {
-                    progress += 2;
-                    if (progress > 90) progress = 90; // 最多到90%，等待实际加载完成
-                    progressBar.style.width = progress + '%';
-                    loadingText.textContent = '音频加载中 ' + progress + '%';
-                }, 100);
-                
-                // 尝试加载音频
-                prankAudio.addEventListener('canplaythrough', function() {
-                    clearInterval(progressInterval);
-                    progressBar.style.width = '100%';
-                    loadingText.textContent = '加载完成！';
-                    
-                    // 短暂显示完成状态后切换界面
-                    setTimeout(function() {
-                        loadingScreen.style.display = 'none';
-                        ageVerification.style.display = 'none';
-                        accessGranted.style.display = 'block';
-                        
-                        // 尝试自动播放
-                        var playPromise = prankAudio.play();
-                        
-                        if (playPromise !== undefined) {
-                            playPromise.then(function() {
-                                audioStatus.textContent = '音频播放中...';
-                            }).catch(function(error) {
-                                console.log('自动播放失败，需要用户交互:', error);
-                                audioStatus.textContent = '自动播放失败，请手动播放';
-                                toggleAudioBtn.style.display = 'inline-block';
-                            });
-                        }
-                    }, 500);
-                });
-                
-                prankAudio.addEventListener('error', function() {
-                    clearInterval(progressInterval);
-                    loadingText.textContent = '音频加载失败，请检查文件路径';
-                    progressBar.style.width = '100%';
-                    progressBar.style.background = '#e74c3c';
-                    
-                    // 仍然显示恶搞界面
-                    setTimeout(function() {
-                        loadingScreen.style.display = 'none';
-                        ageVerification.style.display = 'none';
-                        accessGranted.style.display = 'block';
-                        audioStatus.textContent = '音频加载失败，但恶搞内容已就绪';
-                    }, 1500);
-                });
-                
-                // 开始加载音频
-                prankAudio.load();
-            });
-
-            // 手动播放音频
-            toggleAudioBtn.addEventListener('click', function() {
-                if (prankAudio) {
-                    prankAudio.play();
-                    audioStatus.textContent = '音频播放中...';
-                    toggleAudioBtn.style.display = 'none';
-                }
-            });
+            var warning = document.getElementById('warning');
+            var resultContainer = document.getElementById('resultContainer');
             
-            // 微信浏览器兼容性修复
+            // 检测微信浏览器
             function isWeixinBrowser() {
                 return /MicroMessenger/i.test(navigator.userAgent);
             }
             
+            // 微信浏览器特殊处理
             if (isWeixinBrowser()) {
-                // 针对微信的特殊处理
-                document.body.style.padding = '5px';
-                ageVerification.style.padding = '15px';
-                
-                // 移除可能引起问题的CSS属性
-                document.querySelector('.blur-overlay').style.display = 'none';
+                document.body.style.background = "#fff";
+                document.querySelector('.container').style.boxShadow = "none";
             }
+            
+            // 未满18岁逻辑
+            btnUnderage.addEventListener('click', function() {
+                warning.classList.add('show');
+                setTimeout(function() {
+                    document.body.innerHTML = '<div style="height:100vh;display:flex;justify-content:center;align-items:center;background:#f0f0f0;flex-direction:column;padding:20px;"><h1 style="color:#e74c3c;font-family:Arial,sans-serif;margin-bottom:15px;text-align:center;">访问被拒绝</h1><p style="color:#666;text-align:center;">您未满18岁，无法访问此内容</p></div>';
+                }, 2000);
+            });
+            
+            // 已满18岁逻辑
+            btnAdult.addEventListener('click', function() {
+                container.style.display = 'none';
+                resultContainer.style.display = 'block';
+                
+                // 尝试播放音频
+                try {
+                    var audio = new Audio();
+                    audio.src = 'prank.mp3';
+                    audio.loop = true;
+                    audio.play().catch(function(e) {
+                        console.log('音频播放失败:', e);
+                    });
+                } catch(e) {
+                    console.log('音频初始化失败:', e);
+                }
+            });
         });
     </script>
 </body>
