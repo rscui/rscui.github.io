@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCEM - 公益免费Minecraft网易版大g</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4cc9f0, #f72585);
+        }
+        
+        h1 {
+            font-size: 3.2rem;
+            color: #2d3748;
+            margin-bottom: 12px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .header-tagline {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tag-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+            color: #4a5568;
+        }
+        
+        .tag-item i {
+            color: #4cc9f0;
+        }
+        
+        .advantages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+        
+        .advantage-card {
+            background: white;
+            border-radius: 14px;
+            padding: 30px 25px;
+            text-align: center;
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.07);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .advantage-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .advantage-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #4cc9f0;
+        }
+        
+        .advantage-card h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .advantage-card p {
+            color: #4a5568;
+            line-height: 1.5;
+        }
+        
+        .features {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 7px 25px rgba(0, 0, 0, 0.07);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .features h2 {
+            text-align: center;
+            color: #2d3748;
+            font-size: 2.4rem;
+            margin-bottom: 40px;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .features h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #4cc9f0, #f72585);
+            border-radius: 2px;
+        }
+        
+        .feature-category {
+            margin-bottom: 40px;
+        }
+        
+        .feature-category h3 {
+            color: #4a5568;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            font-weight: 600;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 18px;
+        }
+        
+        .feature-item {
+            background: #f8f9fa;
+            padding: 18px 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.2s ease;
+            border: 1px solid #edf2f7;
+            color: #2d3748;
+            font-weight: 500;
+        }
+        
+        .feature-item:hover {
+            background: #edf2f7;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .download {
+            text-align: center;
+            padding: 50px 40px;
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            box-shadow: 0 7px 25px rgba(0, 0, 0, 0.07);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .download h2 {
+            color: #2d3748;
+            font-size: 2.4rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+        
+        .download p {
+            font-size: 1.2rem;
+            margin-bottom: 35px;
+            color: #4a5568;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        
+        .qq-channel {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #12b7f5;
+            color: white;
+            padding: 16px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(18, 183, 245, 0.25);
+        }
+        
+        .qq-channel:hover {
+            background: #0e99d0;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(18, 183, 245, 0.35);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #718096;
+            font-size: 0.95rem;
+        }
+        
+        .warning {
+            color: #e53e3e;
+            font-weight: 500;
+            margin-top: 25px;
+            padding: 15px;
+            background: #fed7d7;
+            border-radius: 10px;
+            display: inline-block;
+            max-width: 800px;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.4rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .advantages {
+                grid-template-columns: 1fr;
+            }
+            
+            .feature-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
+            
+            .features, .download {
+                padding: 30px 20px;
+            }
+            
+            .header-tagline {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MCEM</h1>
+            <div class="subtitle">我的世界网易版完全免费公益的大g</div>
+            <div class="header-tagline">
+                <div class="tag-item"><i class="fas fa-check-circle"></i> 强大功能</div>
+                <div class="tag-item"><i class="fas fa-check-circle"></i> 简洁UI</div>
+                <div class="tag-item"><i class="fas fa-check-circle"></i> 稳定运行</div>
+                <div class="tag-item"><i class="fas fa-check-circle"></i> 完全免费</div>
+            </div>
+        </header>
+        
+        <section class="advantages">
+            <div class="advantage-card">
+                <div class="advantage-icon"><i class="fas fa-cubes"></i></div>
+                <h3>功能丰富</h3>
+                <p>拥有五大类超过30种实用功能，从世界修改到战斗辅助，满足您的各种需求</p>
+            </div>
+            <div class="advantage-card">
+                <div class="advantage-icon"><i class="fas fa-desktop"></i></div>
+                <h3>UI简洁</h3>
+                <p>直观清晰的用户界面设计，让您轻松找到所需功能，操作简单便捷</p>
+            </div>
+            <div class="advantage-card">
+                <div class="advantage-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3>稳定性强</h3>
+                <p>精心设计的算法保证稳定运行，只要使用得当，极难被检测</p>
+            </div>
+            <div class="advantage-card">
+                <div class="advantage-icon"><i class="fas fa-gift"></i></div>
+                <h3>公益免费</h3>
+                <p>完全免费提供，没有任何隐藏收费，让你在挂雨庭直接爽飞</p>
+            </div>
+        </section>
+        
+        <section class="features">
+            <h2>功能列表</h2>
+            
+            <div class="feature-category">
+                <h3>世界类功能</h3>
+                <div class="feature-grid">
+                    <div class="feature-item">修改玩家模式（当然只是你能看到 没屌用）</div>
+                </div>
+            </div>
+            
+            <div class="feature-category">
+                <h3>玩家类功能</h3>
+                <div class="feature-grid">
+                    <div class="feature-item">传送到任意坐标</div>
+                    <div class="feature-item">穿墙飞行</div>
+                    <div class="feature-item">传送卡服</div>
+                </div>
+            </div>
+            
+            <div class="feature-category">
+                <h3>开发类功能</h3>
+                <div class="feature-grid">
+                    <div class="feature-item">刷屏崩溃服务器</div>
+                    <div class="feature-item">重复发包</div>
+                    <div class="feature-item">停止发包</div>
+                </div>
+            </div>
+            
+            <div class="feature-category">
+                <h3>战斗类功能</h3>
+                <div class="feature-grid">
+                    <div class="feature-item">杀戮光环</div>
+                    <div class="feature-item">自瞄</div>
+                    <div class="feature-item">环绕</div>
+                    <div class="feature-item">修改碰撞箱大小</div>
+                    <div class="feature-item">显示碰撞箱</div>
+                    <div class="feature-item">自动攻击</div>
+                    <div class="feature-item">百米大刀</div>
+                    <div class="feature-item">骑人</div>
+                </div>
+            </div>
+            
+            <div class="feature-category">
+                <h3>音乐类功能</h3>
+                <div class="feature-grid">
+                    <div class="feature-item">本地导入音乐</div>
+                    <div class="feature-item">游戏中播放音乐</div>
+                </div>
+            </div>
+            
+            <div class="feature-category">
+                <h3>扩展与辅助功能</h3>
+                <div class="feature-grid">
+                    <div class="feature-item">船体加速</div>
+                    <div class="feature-item">无法移动</div>
+                    <div class="feature-item">无法跳跃</div>
+                    <div class="feature-item">手部抽筋</div>
+                    <div class="feature-item">人物立正</div>
+                    <div class="feature-item">头部旋转</div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="download">
+            <h2>获取MCEM</h2>
+            <p>目前MCEM外挂需要通过QQ频道获取，请点击下方链接加入我们的频道</p>
+            <a href="https://pd.qq.com/s/h10uh74wn?b=9" class="qq-channel">
+                <i class="fab fa-qq"></i> 加入QQ频道
+            </a>
+            <p class="warning">noiq和lowiq请先看教程，教程链接https://b23.tv/JwxTmg3，还不会的，猛锤自己磨玩114514</p>
+        </section>
+        
+        <footer>
+            <p>© 2025 版权没有 MCEM 我的世界外挂 |</p>
+        </footer>
+    </div>
+</body>
+</html>
